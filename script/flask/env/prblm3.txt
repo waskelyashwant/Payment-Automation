@@ -1,0 +1,19 @@
+S-> w c d S
+S-> b L e
+S-> s
+L-> L ; S
+L-> S
+
+zero production:
+no generation will happen using zero prodeuction.
+
+atmost one production:
+the generations will be-{wcdS, bLe , s}.
+in this only one string has all terminal symbol so that the set of terminal string we can generate is {s}.
+
+atmost two production:
+the generations will be-{wcdS, bLe, s, wdcbLe, wcds, bSe, bL:S, wcdwcdS}.
+set of terminal strings-{wcds, s}.
+
+at most three production:
+set of terminal strings -{wcds, s, wcdwcds, bse}.
