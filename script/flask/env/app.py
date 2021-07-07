@@ -1,3 +1,4 @@
+
 from flask import Flask , render_template , request
 from flask import send_file
 from selenium import webdriver
@@ -116,10 +117,10 @@ def login():
             driver.find_element_by_id("Enter_your_K_number").click()
             for k_no in sheet['E']:
                 if index == 1:
-                    sheet.cell(row = index, column = 7).value = 'Status'
+                    sheet.cell(row = index, column = 6).value = 'Status'
                     index += 1
                 else:
-                    if sheet.cell(row=index, column=2).value == None:
+                    if sheet.cell(row=index, column=1).value == None:
                         break
                     
                     driver.find_element_by_id("Enter_your_K_number").clear()
@@ -130,11 +131,11 @@ def login():
                     
                     # print(asds.get_attribute("innerHTML"))
                     dat =  driver.find_element_by_xpath("/html/body/div[1]/section/div[3]/div/div/div/div/div[3]/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td[12]")
-                    if amnt==sheet.cell(row=index, column=5).value:
-                        sheet.cell(row = index, column = 7).value = "paid"
+                    if amnt==sheet.cell(row=index, column=4).value:
+                        sheet.cell(row = index, column = 6).value = "paid"
                         df.save('status.xlsx')
                     else:
-                        sheet.cell(row = index, column = 7).value = "unpaid"
+                        sheet.cell(row = index, column = 6).value = "unpaid"
                         df.save('status.xlsx')
                     
             # driver.close()
@@ -147,10 +148,10 @@ def login():
             driver.find_element_by_id("Enter_your_K_number").click()
             for k_no in sheet['E']:
                 if index == 1:
-                    sheet.cell(row = index, column = 7).value = 'Status'
+                    sheet.cell(row = index, column = 6).value = 'Status'
                     index += 1
                 else:
-                    if sheet.cell(row=index, column=2).value == None:
+                    if sheet.cell(row=index, column=1).value == None:
                         break
                     driver.find_element_by_id("Enter_your_K_number").clear()
                     driver.find_element_by_id("Enter_your_K_number").send_keys(k_no.value)	
@@ -161,11 +162,11 @@ def login():
                     print(amnt)
                     dat =  driver.find_element_by_xpath("/html/body/div[1]/section/div[3]/div/div/div/div/div[3]/div[2]/div/div[1]/div[2]/table/tbody/tr[1]/td[13]")
                     dat = dat.get_attribute("innerHTML")
-                    if amnt==str(sheet.cell(row=index, column=5).value):
-                        sheet.cell(row = index, column = 7).value = "paid"
+                    if amnt==str(sheet.cell(row=index, column=4).value):
+                        sheet.cell(row = index, column = 6).value = "paid"
                         df.save('status.xlsx')
                     else:
-                        sheet.cell(row = index, column = 7).value = "unpaid"
+                        sheet.cell(row = index, column = 6).value = "unpaid"
                         df.save('status.xlsx')
         
         driver.close()

@@ -7,9 +7,11 @@ const cors = require("cors");
 const fileupload = require("express-fileupload");
 const fs = require("fs");
 const path = require("path");
+const { SSL_OP_NO_TLSv1_1 } = require("constants");
 app.use(fileupload());
 app.use(express.static("files"));
 app.use(cors());
+
 app.post("/sendFile", function (req, res) {
   const data = req.files.file;
   fs.writeFile(
@@ -33,13 +35,21 @@ app.post("/sendFile", function (req, res) {
   return;
 });
 
+app.post("/sendAppValue", function (req, res) {
+  totalNoOfApps = req.body.value;
+  console.log(req.body.value);
+  res.send({ code: "Success" });
+  console.log("totalNoOfApps", totalNoOfApps);
+});
+
 let pythonProcess = null;
 let pythonProcess2 = null;
 let ended = 1;
 let ended2 = 1;
+
 app.get("/runScript", (req, res) => {
   const spawn = require("child_process").spawn;
-  pythonProcess = spawn("python", ["./script/script.py"]);
+  pythonProcess = spawn("python", ["./script/script.py", totalNoOfApps]);
   ended = 0;
   // pythonProcess.kill();
   pythonProcess.stdout.on("data", (data) => {
@@ -108,6 +118,38 @@ app.get("/status2", (req, res) => {
       value: 0,
     });
   else res.send({ value: 1 });
+});
+
+app.get("/appNo", (req, res) => {
+  const fs1 = require("fs");
+  var ans = -1;
+  fs1.readFile("app_no.txt", (err, data) => {
+    if (err) throw err;
+
+    ans = data.toString();
+    var x = ans.split(" ");
+    res.send({
+      bN: x[0],
+      kN: x[1],
+      aN: x[2],
+    });
+    console.log(ans);
+  });
+});
+
+app.get("/delFile", (req, res) => {
+  const fs2 = require("fs");
+  fs2.unlink("Bill File updated.csv", (err, data) => {
+    if (err) {
+      res.send({
+        value: 0,
+      });
+    } else {
+      res.send({
+        value: 1,
+      });
+    }
+  });
 });
 
 app.use(express.static(path.resolve(__dirname, "./client/build")));

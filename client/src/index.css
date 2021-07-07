@@ -1,5 +1,6 @@
 body {
-  margin: 0;
+  margin: 0px;
+  padding: 0px;
   background-color: #9da3a4;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -18,6 +19,34 @@ img {
   height: 50px;
 }
 
-h3 {
-  color: #ffcc00;
+h5 {
+  color: #e0ee17;
+}
+
+.war {
+  color: red;
+}
+
+.del {
+  background-color: rgb(179, 60, 60);
+  border: none;
+  color: white;
+}
+
+.del:hover {
+  transform: scale(1.1);
+}
+
+.app {
+  background-color: rgb(192, 197, 143);
+}
+
+.app_no {
+  height: 25px;
+  width: 100px;
+}
+
+.appbut {
+  height: 25px;
+  width: 70px;
 }
