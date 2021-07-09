@@ -139,7 +139,7 @@ app.get("/appNo", (req, res) => {
 
 app.get("/delFile", (req, res) => {
   const fs2 = require("fs");
-  fs2.unlink("Bill File updated.csv", (err, data) => {
+  fs2.unlink("Bill File updated.xlsx", (err, data) => {
     if (err) {
       res.send({
         value: 0,

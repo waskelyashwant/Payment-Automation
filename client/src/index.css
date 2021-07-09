@@ -50,3 +50,7 @@ h5 {
   height: 25px;
   width: 70px;
 }
+
+.show {
+  background-color: white;
+}

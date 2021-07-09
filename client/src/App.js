@@ -5,6 +5,7 @@ import { Button } from "@material-ui/core";
 import logo1 from "./bill_file.jpg";
 import logo2 from "./card_file.jpg";
 import file from "./results/Bill File updated.csv";
+import XLSX from "xlsx";
 
 function App() {
   let flag = 0;
@@ -12,6 +13,7 @@ function App() {
   const [selectedFile2, setSelectedFile2] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
   const [isFilePicked2, setIsFilePicked2] = useState(false);
+  const [items, setItems] = useState([]);
   const changeHandler = (e) => {
     setSelectedFile(e.target.files[0]);
     setIsFilePicked(true);
@@ -117,7 +119,7 @@ function App() {
 
   function download() {
     // alert("Hello");
-    window.open("http://127.0.0.1:8887/Bill%20File%20updated.csv", "_blank");
+    window.open("http://127.0.0.1:8887/Bill%20File%20updated.xlsx", "_blank");
   }
 
   const getAppNo = () => {
@@ -145,6 +147,36 @@ function App() {
           alert("No such file");
         }
       });
+  };
+
+  const readExcel = (file) => {
+    const promise = new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
+
+      fileReader.onload = (e) => {
+        const bufferArray = e.target.result;
+
+        const wb = XLSX.read(bufferArray, { type: "buffer" });
+
+        const wsname = wb.SheetNames[0];
+
+        const ws = wb.Sheets[wsname];
+
+        const data = XLSX.utils.sheet_to_json(ws);
+
+        resolve(data);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+
+    promise.then((d) => {
+      console.log(d);
+      setItems(d);
+    });
   };
 
   return (
@@ -273,6 +305,54 @@ function App() {
         <button variant="contained" className="app" onClick={getAppNo}>
           App processing
         </button>
+      </div>
+      {/*  */}
+      {/*  */}
+      {/*  */}
+      <div className="container my-4">
+        <p>Choose an excel file and get its data </p>
+        <input
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files[0];
+            readExcel(file);
+          }}
+        />
+
+        <table class="table table-bordered border-secondary show">
+          <thead>
+            <tr>
+              <th scope="col">Due Date</th>
+              <th scope="col">Description</th>
+              <th scope="col">Biller Name</th>
+              <th scope="col">K Number</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Status</th>
+              <th scope="col">Reason</th>
+              <th scope="col">Biller name as per bill</th>
+              <th scope="col">Amount on bill</th>
+              <th scope="col">Reference no.</th>
+              <th scope="col">App number</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((d) => (
+              <tr key={d["Due Date"]}>
+                <th>{d["Due Date"]}</th>
+                <td>{d["Description"]}</td>
+                <td>{d["Biller Name"]}</td>
+                <td>{d["K Number"]}</td>
+                <td>{d["Amount"]}</td>
+                <td>{d["Status"]}</td>
+                <td>{d["Reason"]}</td>
+                <td>{d["Biller name on bill"]}</td>
+                <td>{d["Amount on bill"]}</td>
+                <td>{d["Reference no."]}</td>
+                <td>{d["App no."]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

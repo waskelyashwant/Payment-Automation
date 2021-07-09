@@ -76,9 +76,9 @@ copy_file()
 
 
 if os.path.exists(bill_file_location)==False:
-	df = pd.DataFrame({'Due Date': [],'Description': [], 'Biller Name':[], 'K Number': [], 'Amount': [], 'Status': [], 'Reason': [], 'Biller name on bill':[] , 'Amount on bill':[] ,'Reference no.':[] ,'App no.':[]})
+	df1 = pd.DataFrame({'Due Date': [],'Description': [], 'Biller Name':[], 'K Number': [], 'Amount': [], 'Status': [], 'Reason': [], 'Biller name on bill':[] , 'Amount on bill':[] ,'Reference no.':[] ,'App no.':[]})
 	writer = pd.ExcelWriter('demo.xlsx', engine='xlsxwriter')
-	df.to_excel(writer, sheet_name='Sheet1', index=False)
+	df1.to_excel(writer, sheet_name='Sheet1', index=False)
 	writer.save()
 
 
@@ -111,7 +111,7 @@ def update_app_no(k,n):
 	ans = bn +" "+ str(k_number(k))+ " " + str(n)
 	f.write(ans)
 	f.close()
-
+	print("update")
 
 k_app = 'script/k_and_app.xlsx'
 
@@ -125,7 +125,8 @@ def k_app_file(k,n):
 		outSheet.write(0,i,field_names[i])
 
 	outSheet.write(1,0,k)
-	outSheet.write(1,0,n)
+	outSheet.write(1,1,n)
+	outWorkbook.close()
 
 
 if os.path.exists(k_app)==False:
@@ -283,6 +284,7 @@ def elec():
 	# 	x = billPay()
 
 def descr(k):
+	print(k)
 	description = df.iloc[k]['Description']
 	string = description.split(" ")
 	distributor = ""
@@ -350,7 +352,7 @@ def pay_now_page(k):
 	print(customer_name)
 	print(int(amount))
 	print(int(amount_csv))
-	if str(amount) == str(amount_csv):
+	if int(amount) == int(amount_csv):
 		pay_now = dr.find_element_by_xpath ("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.drawerlayout.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[2]/android.view.View[7]/android.widget.Button")
 		pay_now.click()
 		print("passed pay button")
@@ -465,14 +467,7 @@ def delete_linked_cards():
 
 
 def close_app():
-	# subprocess.call("adb shell input keyevent KEYCODE_APP_SWITCH",shell=True)
-	# time.sleep(1)
-	# clear = dr.find_element_by_id("com.android.systemui:id/clearAnimView")
-	# print(clear)
-	# time.sleep(3)
 	try:
-		# clear.click()
-		# time.sleep(5)
 		subprocess.call("adb shell input keyevent KEYCODE_APP_SWITCH",shell=True)
 		time.sleep(2)
 		subprocess.call("adb shell input keyevent DEL")
@@ -503,7 +498,6 @@ shortcut = {"1 - 100":'//android.widget.RelativeLayout[@content-desc="1 - 100"]'
 			"601 - 670":'//android.widget.RelativeLayout[@content-desc="601 - 670"]'}
 
 def ranges(n):
-	print(shortcut["1 - 100"])
 	if n >= 1 and n <= 100:
 		return shortcut["1 - 100"]
 	elif n >= 101 and n <= 200:
@@ -599,9 +593,9 @@ while k<length:
 		except:
 			# try:
 				# el2 = dr.find_element_by_id("com.enstage.wibmo.hdfc:id/buttonNegative")
-			k_app_file(k,app_no)
+			k_app_file(k-1,app_no)
 			app_no+=1
-			update_app_no(k, app_no)
+			update_app_no(k-1, app_no)
 			close_app()
 			z=1
 			break
@@ -754,27 +748,30 @@ while k<length:
 
 	# print(k)
 
-	print("Promocode")
-	promocode = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[5]")
-	promocode.click()
-	time.sleep(1)
-	enter_pcode = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.EditText")
-	enter_pcode.send_keys("billpay")
-
-	apply_butt = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[3]")
-	apply_butt.click()
-	time.sleep(5)
-
 	try:
-		ok = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.Button")
-		ok.click()
-
+		print("Promocode")
+		promocode = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[5]")
+		promocode.click()
 		time.sleep(1)
+		enter_pcode = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.EditText")
+		enter_pcode.send_keys("billpay")
 
-		back = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[2]")
-		back.click()
+		apply_butt = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[3]")
+		apply_butt.click()
+		time.sleep(5)
+
+		try:
+			ok = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.Button")
+			ok.click()
+
+			time.sleep(1)
+
+			back = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[2]")
+			back.click()
+		except:
+			pass
 	except:
-		pass
+		close_app()
 
 
 	try:
@@ -885,7 +882,6 @@ while k<length:
 		print(df.iloc[k]['Due Date'], "    ", df.iloc[k]['Description'], "    ", df.iloc[k]['Biller Name'], "    ", df.iloc[k]['K Number'],  "    ", df.iloc[k]['Amount'], "   Recheck    ", "     Unable to fetch transaction details     ", lis[1], "    ", lis[2], "    ", " ", "     ", app_no)
 		print("Fetching transaction history")
 		copy_file()
-		pass
 
 	# cross = dr.find_element_by_xpath('//android.widget.TextView[@content-desc="Close"]')
 	# cross.click()
@@ -926,7 +922,7 @@ while k<length:
 	# print(dr.page_source)
 
 	# linked_cards = dr.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/androidx.drawerlayout.widget.DrawerLayout/android.widget.FrameLayout/androidx.recyclerview.widget.RecyclerView[2]/android.widget.LinearLayout[3]/android.view.ViewGroup/android.widget.TextView")
-	# linked_cards.click()\
+	# linked_cards.click()
 
 	delete_linked_cards()
 
